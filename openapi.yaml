@@ -1,0 +1,133 @@
+openapi: 3.0.0
+info:
+  title: Fast Gaming Community API
+  description: API serving data gathered and analyzed by our lord and savior Cornix
+  contact:
+    name: Jason Houtekamer
+    url: https://github.com/JasonHoutekamer
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
+servers:
+  - url: https://test.gaming-community.com/api/v1
+    description: Test Server
+  - url: https://fast.gaming-community.com/api/v1
+    description: Production Server
+tags:
+  - name: Categories
+    description: Everything about item categories
+paths:
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: List all categories
+      operationId: Get
+      responses:
+        '200':
+          description: An array of categories
+          content:
+            applicaton/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+    post:
+      tags:
+        - Categories
+      summary: Upsert a category
+      operationId: Post
+      requestBody:
+        description: New or updated category
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '201':
+          description: Category
+          content:
+            applicaton/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+  /categories/{id}:
+    delete:
+      summary: Delete a specific category
+      operationId: Delete
+      tags:
+        - Categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Category Id
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content   
+components:
+  schemas:
+    PriceData:
+      type: object
+      required:
+        - buy
+        - sell
+      properties:
+        buy:
+          type: integer
+          format: int32
+        sell:
+          type: integer
+          format: int32
+    Item:
+      type: object
+      required:
+        - id
+        - itemId
+        - name
+        - price
+        - buy
+        - sell
+      properties:
+        id:
+          type: string
+        itemId:
+          type: string
+        name:
+          type: string
+        price:
+          $ref: '#/components/schemas/PriceData'
+        buy:
+          type: integer
+          format: int32
+        sell:
+          type: integer
+          format: int32
+    Category:
+      type: object
+      required:
+        - categoryId
+        - name
+        - info
+        - categoryItems
+        - buy
+        - sell
+      properties:
+        categoryId:
+          type: integer
+          format: int32
+        name:
+          type: string
+        info:
+          type: string
+        categoryItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        buy:
+          type: integer
+          format: int32
+        sell:
+          type: integer
+          format: int32
